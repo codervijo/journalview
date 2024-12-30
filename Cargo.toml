@@ -1,0 +1,8 @@
+[package]
+name = "jview"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+crossterm = "0.24"
+ratatui = { version = "0.30.0-alpha.0" }
