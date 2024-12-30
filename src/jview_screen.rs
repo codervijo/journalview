@@ -1,5 +1,5 @@
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
-enum UiSection {
+pub enum UiSection {
     Search,
     Logs,
     Selector,
@@ -8,11 +8,12 @@ enum UiSection {
 
 impl UiSection {
     // Get the next variant, returning None when reaching the end
-    fn next(&self) -> UiSection {
+    pub fn next(&self) -> UiSection {
         match self {
             UiSection::Search => UiSection::Logs,
             UiSection::Logs => UiSection::Selector,
             UiSection::Selector => UiSection::Search,
+            &UiSection::Help => todo!(),
         }
     }
 }

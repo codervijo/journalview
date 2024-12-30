@@ -12,10 +12,16 @@ use crossterm::{
 };
 use std::{io, process::Command};
 
+mod jview_screen;
 mod jview_logs;
 mod jview_search;
 mod jview_selector;
 mod jview_help;
+
+use crate::jview_screen::UiSection::Search;
+use crate::jview_screen::UiSection::Logs;
+use crate::jview_screen::UiSection::Selector;
+use crate::jview_screen::UiSection::Help;
 
 fn main() -> Result<(), io::Error> {
     enable_raw_mode()?;
@@ -27,7 +33,7 @@ fn main() -> Result<(), io::Error> {
     let logs = jview_logs::fetch_journalctl_logs();
     let mut vertical_offset = 0;
     let mut horizontal_offset = 0;
-    let mut selected_section = 0; // 0: Search, 1: Logs, 2: Selection
+    let mut selected_section = Search; // 0: Search, 1: Logs, 2: Selection
 
     loop {
         terminal.draw(|f| {
@@ -72,20 +78,20 @@ fn main() -> Result<(), io::Error> {
 
             // Draw the left column sections
 
-            let selwidget = jview_selector::get_widget("Selectors", selected_section == 2);
+            let selwidget = jview_selector::get_widget("Selectors", selected_section == Selector);
             f.render_widget(selwidget, selection_chunks[0]);
             //let tbdwidget = Paragraph::new("TBD section")
             //    .block(Block::default().borders(Borders::ALL).title("TBD"));
             //  f.render_widget(tbdwidget, selection_chunks[1]);
 
             // Search Section
-            let search_style = jview_search::get_style(selected_section == 0);
+            let search_style = jview_search::get_style(selected_section == Search);
             let search_widget = jview_search::get_search_widget("Search text", search_style);
             f.render_widget(search_widget, viewer_chunks[0]);
 
             // Logs Section
-            let mut log_items: Vec<ListItem> = jview_logs::get_log_items(vertical_offset, viewer_chunks[1].height as usize, horizontal_offset, selected_section == 1);
-            let logs_widget = jview_logs::get_log_widget(log_items, selected_section == 1);
+            let mut log_items: Vec<ListItem> = jview_logs::get_log_items(vertical_offset, viewer_chunks[1].height as usize, horizontal_offset, selected_section == Logs);
+            let logs_widget = jview_logs::get_log_widget(log_items, selected_section == Logs);
             f.render_widget(logs_widget, viewer_chunks[1]);
 
             // Help Section
@@ -99,25 +105,25 @@ fn main() -> Result<(), io::Error> {
                 KeyCode::Char('q') => break,
                 KeyCode::Char('Q') => break,
                 KeyCode::Tab => {
-                    selected_section = (selected_section + 1) % 3;
+                    selected_section = selected_section.next();
                 }
                 KeyCode::Up => {
-                    if selected_section == 1 && vertical_offset > 0 {
+                    if selected_section == Logs && vertical_offset > 0 {
                         vertical_offset -= 1;
                     }
                 }
                 KeyCode::Down => {
-                    if selected_section == 1 && vertical_offset < logs.len() {
+                    if selected_section == Logs && vertical_offset < logs.len() {
                         vertical_offset += 1;
                     }
                 }
                 KeyCode::Left => {
-                    if selected_section == 1 && horizontal_offset > 0 {
+                    if selected_section == Logs && horizontal_offset > 0 {
                         horizontal_offset -= 1;
                     }
                 }
                 KeyCode::Right => {
-                    if selected_section == 1 {
+                    if selected_section == Logs {
                         horizontal_offset += 1;
                     }
                 }
