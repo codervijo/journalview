@@ -8,7 +8,7 @@ use ratatui::{
 };
 use ratatui::style;
 
-pub fn get_style(selected: bool) -> style::Style {
+fn get_style(selected: bool) -> style::Style {
     if selected {
         Style::default()
             .fg(Color::Cyan)
@@ -24,14 +24,13 @@ pub fn get_style(selected: bool) -> style::Style {
 /// 
 /// # Arguments
 /// 
-/// * `search_text` - Text to display in the search widget.
 /// * `search_style` - The style to apply to the search widget.
 ///
 /// # Returns
 /// 
 /// A `Paragraph` widget configured for the search functionality.
-pub fn get_search_widget(search_text: &str, search_style: Style) -> Paragraph<'_> {
-    Paragraph::new(search_text)
+pub fn get_search_widget(selected: bool) -> Paragraph<'static> {
+    Paragraph::new("Search text")
         .block(Block::default().borders(Borders::ALL).title("Search"))
-        .style(search_style)
+        .style(get_style(selected))
 }

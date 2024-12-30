@@ -78,15 +78,14 @@ fn main() -> Result<(), io::Error> {
 
             // Draw the left column sections
 
-            let selwidget = jview_selector::get_widget("Selectors", selected_section == Selector);
+            let selwidget = jview_selector::get_widget(selected_section == Selector);
             f.render_widget(selwidget, selection_chunks[0]);
             //let tbdwidget = Paragraph::new("TBD section")
             //    .block(Block::default().borders(Borders::ALL).title("TBD"));
             //  f.render_widget(tbdwidget, selection_chunks[1]);
 
             // Search Section
-            let search_style = jview_search::get_style(selected_section == Search);
-            let search_widget = jview_search::get_search_widget("Search text", search_style);
+            let search_widget = jview_search::get_search_widget(selected_section == Search);
             f.render_widget(search_widget, viewer_chunks[0]);
 
             // Logs Section

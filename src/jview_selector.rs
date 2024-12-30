@@ -24,14 +24,13 @@ fn get_style(selected: bool) -> style::Style {
 /// 
 /// # Arguments
 /// 
-/// * `search_text` - Text to display in the search widget.
-/// * `search_style` - The style to apply to the search widget.
+/// * `selected` - Is this widget currently selected?
 ///
 /// # Returns
 /// 
 /// A `Paragraph` widget configured for the search functionality.
-pub fn get_widget(text: &str, selected: bool) -> Paragraph<'_> {
-    Paragraph::new(text)
+pub fn get_widget(selected: bool) -> Paragraph<'static> {
+    Paragraph::new("Selectors")
         .block(Block::default().borders(Borders::ALL))
         .style(get_style(selected))
 }
