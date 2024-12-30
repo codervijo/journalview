@@ -1,10 +1,7 @@
-use std::{io, process::Command};
+use std::{process::Command};
 use ratatui::{
-    backend::CrosstermBackend,
-    layout::{Constraint, Direction, Layout, Rect},
     style::{Style, Color},
-    widgets::{Block, Borders, List, ListItem, Paragraph},
-    Terminal,
+    widgets::{Block, Borders, List, ListItem},
 };
 use ratatui::style;
 
