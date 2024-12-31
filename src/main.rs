@@ -77,7 +77,7 @@ fn main() -> Result<(), io::Error> {
             f.render_widget(selwidget, selection_chunks[0]);
 
             // Search Section
-            let search_widget = jview_search::get_search_widget(screen.get_selected() == Search);
+            let search_widget = screen.get_search_widget(screen.get_selected() == Search);
             f.render_widget(search_widget, viewer_chunks[0]);
 
             // Logs Section

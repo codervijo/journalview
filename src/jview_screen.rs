@@ -1,4 +1,5 @@
 use crossterm::event::{self, Event, KeyCode};
+use ratatui::widgets::Paragraph;
 
 use crate::jview_logs;
 use crate::jview_search;
@@ -42,6 +43,10 @@ impl UiScreen {
 
     pub fn get_selected(&self) -> UiSection {
         self.selected
+    }
+
+    pub fn get_search_widget(&self, selected: bool) -> Paragraph<'static> {
+        self.search_tui.clone().get_search_widget(selected)
     }
 }
 

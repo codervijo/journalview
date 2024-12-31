@@ -6,6 +6,7 @@ use crossterm::event::{self, Event, KeyCode};
 use std::io;
 use ratatui::style;
 
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct JviewSearch {
     input: String,
 }
@@ -13,7 +14,7 @@ pub struct JviewSearch {
 impl JviewSearch {
     pub fn new() -> Self {
         JviewSearch {
-            input: "".to_string(),
+            input: "Type to start searching...".to_string(),
         }
     }
 }
@@ -30,23 +31,24 @@ fn get_style(selected: bool) -> style::Style {
     }
 }
 
-/// Creates a search widget for the application.
-/// 
-/// # Arguments
-/// 
-/// * `selected` - Is this widget currently selected?
-///
-/// # Returns
-/// 
-/// A `Paragraph` widget configured for the search functionality.
-pub fn get_search_widget(selected: bool) -> Paragraph<'static> {
-    Paragraph::new("\u{1F50D} Type to start searching...")
-        .block(Block::default().borders(Borders::ALL).title("Search"))
-        .style(get_style(selected))
-}
-
 impl JviewSearch {
-    pub fn get_search_input(&self) -> Result<String, std::io::Error> {
+    /// Creates a search widget for the application.
+    ///
+    /// # Arguments
+    ///
+    /// * `selected` - Is this widget currently selected?
+    ///
+    /// # Returns
+    ///
+    /// A `Paragraph` widget configured for the search functionality.
+    pub fn get_search_widget(self, selected: bool) -> Paragraph<'static> {
+        let intext = format!("\u{1F50D} {}", self.input);
+        Paragraph::new(intext)
+            .block(Block::default().borders(Borders::ALL).title("Search"))
+            .style(get_style(selected))
+    }
+
+    pub fn get_search_input(&mut self) -> Result<String, std::io::Error> {
         let mut input = String::new();
         loop {
             if let event::Event::Key(key) = event::read()? {
@@ -66,6 +68,7 @@ impl JviewSearch {
                 }
             }
         }
+        self.input = input.clone();
         Ok(input)
     }
 }
