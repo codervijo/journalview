@@ -1,8 +1,7 @@
-use crossterm::{
-    event::{self, Event, KeyCode},
-};
+use crossterm::event::{self, Event, KeyCode};
 
 use crate::jview_logs;
+use crate::jview_search;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum UiSection {
@@ -26,12 +25,14 @@ impl UiSection {
 
 pub struct UiScreen {
     selected: UiSection,
+    search_tui: jview_search::JviewSearch,
 }
 
 impl UiScreen {
     pub fn new() -> Self {
         UiScreen {
-            selected: UiSection::Logs, // Default initial section
+            selected: UiSection::Logs,
+            search_tui: jview_search::JviewSearch::new(),
         }
     }
 
@@ -49,6 +50,9 @@ pub fn screen_navigate(screen: &mut UiScreen) -> Result<bool, std::io::Error> {
     let mut horizontal_offset = 0;
     let logs = jview_logs::fetch_journalctl_logs();
 
+    if screen.get_selected() == UiSection::Search {
+        let res = screen.search_tui.get_search_input()?;
+    }
     if let Event::Key(key) = event::read()? {
         match key.code {
             KeyCode::Char('q') => return Ok(true),
