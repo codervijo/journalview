@@ -27,6 +27,7 @@ impl UiSection {
     }
 }
 
+#[derive(Clone)]
 pub struct UiScreen {
     selected: UiSection,
     search_tui: jview_search::JviewSearch,
@@ -54,8 +55,12 @@ impl UiScreen {
         self.search_tui.clone().get_search_widget(selected)
     }
 
-    pub fn get_logs_widget<'a>(&self, items: Vec<ListItem<'a>>, selected: bool) -> List<'a> {
-        self.logs_tui.clone().get_logs_widget(items, selected)
+    pub fn get_logs_widget<'a>(&self, selected: bool) -> List<'a> {
+        self.logs_tui.clone().get_logs_widget(selected)
+    }
+
+    pub fn set_logs_max_height(&mut self, h: usize) {
+        self.logs_tui.clone().set_max_height(h);
     }
 }
 
@@ -66,6 +71,15 @@ pub fn screen_navigate(screen: &mut UiScreen) -> Result<bool, std::io::Error> {
 
     if screen.get_selected() == UiSection::Search {
         let res = screen.search_tui.get_search_input()?;
+        if res == KeyCode::Tab {
+            screen.next_section();
+            return Ok(false);
+        }
+        return Ok(false);
+    }
+
+    if screen.get_selected() == UiSection::Logs {
+        let res = screen.logs_tui.logs_navigate()?;
         if res == KeyCode::Tab {
             screen.next_section();
             return Ok(false);

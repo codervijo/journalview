@@ -6,10 +6,11 @@ use ratatui::{
 use ratatui::style;
 use crossterm::event::{self, Event, KeyCode};
 
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq, Eq, Copy)]
 pub struct JviewLogs {
     vertical_offset: usize,
     horizontal_offset: usize,
+    max_viewer_height: usize,
 }
 
 impl JviewLogs {
@@ -17,7 +18,12 @@ impl JviewLogs {
         JviewLogs {
             vertical_offset: 0,
             horizontal_offset: 0,
+            max_viewer_height: 25,
         }
+    }
+
+    pub fn set_max_height(&mut self, h: usize) {
+        self.max_viewer_height = h;
     }
 }
 
@@ -61,34 +67,33 @@ pub fn get_section_style(selected: bool) -> style::Style {
     }
 }
 
-pub fn get_log_items(vertical_offset: usize, maxviewer: usize, horizontal_offset: usize, selected_section: bool) -> Vec<ListItem<'static>> {
-    let logs = fetch_journalctl_logs();
-    let mut log_items: Vec<ListItem> = Vec::new();
-
-    for (i, line) in logs.iter().enumerate() {
-        if i < vertical_offset {
-            continue; // Skip lines until the vertical offset
-        }
-    
-        if log_items.len() >= maxviewer {
-            break; // Stop if we've taken enough lines to fit the section
-        }
-
-        let visible_line = if line.len() > horizontal_offset {
-            &line[horizontal_offset..]
-        } else {
-            ""
-        };
-
-        let style = get_style(selected_section);
-
-        log_items.push(ListItem::new(visible_line.to_string()).style(style));
-    }
-
-    log_items
-}
-
 impl JviewLogs {
+    pub fn get_log_items(self, selected: bool) -> Vec<ListItem<'static>> {
+        let logs = fetch_journalctl_logs();
+        let mut log_items: Vec<ListItem> = Vec::new();
+
+        for (i, line) in logs.iter().enumerate() {
+            if i < self.vertical_offset {
+                continue; // Skip lines until the vertical offset
+            }
+
+            if log_items.len() >= self.max_viewer_height {
+                break; // Stop if we've taken enough lines to fit the section
+            }
+
+            let visible_line = if line.len() > self.horizontal_offset {
+                &line[self.horizontal_offset..]
+            } else {
+                ""
+            };
+
+            let style = get_style(selected);
+
+            log_items.push(ListItem::new(visible_line.to_string()).style(style));
+        }
+
+        log_items
+    }
 
     /// Creates a configurable widget for displaying a list of items.
     ///
@@ -100,8 +105,10 @@ impl JviewLogs {
     /// # Returns
     ///
     /// A `List` widget configured with the provided parameters.
-    pub fn get_logs_widget<'b>(&self, items: Vec<ListItem<'b>>, selected: bool) -> List<'b> {
-        List::new(items)
+    pub fn get_logs_widget<'b>(&self, selected: bool) -> List<'b> {
+        let mut logitems: Vec<ListItem> = (*self.get_log_items(selected)).to_vec();
+
+        List::new(logitems)
             .block(Block::default().borders(Borders::ALL).title("Logs"))
             .style(get_style(selected))
     }
