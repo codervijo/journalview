@@ -55,18 +55,6 @@ pub fn get_style(selected: bool) -> style::Style {
     }
 }
 
-pub fn get_section_style(selected: bool) -> style::Style {
-    if selected {
-        Style::default()
-            .fg(Color::Cyan)
-            .bg(Color::Black)
-    } else {
-        Style::default()
-            .fg(Color::White)
-            .bg(Color::Blue)
-    }
-}
-
 impl JviewLogs {
     pub fn get_log_items(self, selected: bool) -> Vec<ListItem<'static>> {
         let logs = fetch_journalctl_logs();

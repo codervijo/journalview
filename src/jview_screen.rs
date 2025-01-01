@@ -64,8 +64,6 @@ impl UiScreen {
 }
 
 pub fn screen_navigate(screen: &mut UiScreen) -> Result<bool, std::io::Error> {
-    let logs = jview_logs::fetch_journalctl_logs();
-
     if screen.get_selected() == UiSection::Search {
         let res = screen.search_tui.get_search_input()?;
         if res == KeyCode::Tab {

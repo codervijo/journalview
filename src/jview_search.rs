@@ -83,7 +83,3 @@ impl JviewSearch {
         Ok(KeyCode::Enter)
     }
 }
-
-pub fn navigate() {
-
-}
