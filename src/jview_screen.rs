@@ -57,7 +57,12 @@ pub fn screen_navigate(screen: &mut UiScreen) -> Result<bool, std::io::Error> {
 
     if screen.get_selected() == UiSection::Search {
         let res = screen.search_tui.get_search_input()?;
+        if res == KeyCode::Tab {
+            screen.next_section();
+            return Ok(false);
+        }
     }
+
     if let Event::Key(key) = event::read()? {
         match key.code {
             KeyCode::Char('q') => return Ok(true),
