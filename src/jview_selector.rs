@@ -1,8 +1,26 @@
 use ratatui::{
     style::{Style, Color},
-    widgets::{Block, Borders, Paragraph},
+    widgets::{Block, Borders, Paragraph, List},
 };
+use ratatui::widgets::ListItem;
 use ratatui::style;
+use std::{process::Command};
+
+pub fn fetch_systemd_units() -> Vec<String> {
+    let output = Command::new("systemctl")
+        .args(["list-units", "--all", "--no-pager", "--plain"])
+        .output()
+        .expect("Failed to run systemctl command");
+
+    if output.status.success() {
+        String::from_utf8_lossy(&output.stdout)
+            .lines()
+            .map(|line| line.to_string())
+            .collect()
+    } else {
+        vec!["<All Systemd units>".to_string()]
+    }
+}
 
 fn get_style(selected: bool) -> style::Style {
     if selected {
@@ -24,9 +42,17 @@ fn get_style(selected: bool) -> style::Style {
 ///
 /// # Returns
 /// 
-/// A `Paragraph` widget configured for the search functionality.
-pub fn get_widget(selected: bool) -> Paragraph<'static> {
-    Paragraph::new("Selectors")
-        .block(Block::default().borders(Borders::ALL))
+/// A `List` widget configured for the search functionality.
+pub fn get_widget(selected: bool) -> List<'static> {
+    let units = fetch_systemd_units();
+    let items: Vec<ListItem> = units
+        .into_iter()
+        .map(|unit| ListItem::new(unit))
+        .collect();
+
+    List::new(items)
+        .block(Block::default()
+        .borders(Borders::ALL)
+        .title("Systemd Units"))
         .style(get_style(selected))
 }
