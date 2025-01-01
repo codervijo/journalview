@@ -40,7 +40,7 @@ fn main() -> Result<(), io::Error> {
                     Constraint::Min(5), 
                     Constraint::Length(3),
                 ])
-                .split(f.size());
+                .split(f.area());
             
             let active_layout = Layout::default()
                 .direction(Direction::Horizontal) // Split horizontally into left and right columns
