@@ -1,6 +1,9 @@
 use crossterm::event::{self, Event, KeyCode};
 use ratatui::widgets::Paragraph;
-
+use ratatui::{
+    style::{Style, Color},
+    widgets::{Block, Borders, List, ListItem},
+};
 use crate::jview_logs;
 use crate::jview_search;
 
@@ -27,6 +30,7 @@ impl UiSection {
 pub struct UiScreen {
     selected: UiSection,
     search_tui: jview_search::JviewSearch,
+    logs_tui: jview_logs::JviewLogs,
 }
 
 impl UiScreen {
@@ -34,6 +38,7 @@ impl UiScreen {
         UiScreen {
             selected: UiSection::Logs,
             search_tui: jview_search::JviewSearch::new(),
+            logs_tui: jview_logs::JviewLogs::new(),
         }
     }
 
@@ -47,6 +52,10 @@ impl UiScreen {
 
     pub fn get_search_widget(&self, selected: bool) -> Paragraph<'static> {
         self.search_tui.clone().get_search_widget(selected)
+    }
+
+    pub fn get_logs_widget<'a>(&self, items: Vec<ListItem<'a>>, selected: bool) -> List<'a> {
+        self.logs_tui.clone().get_logs_widget(items, selected)
     }
 }
 

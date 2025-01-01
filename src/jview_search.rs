@@ -46,7 +46,7 @@ impl JviewSearch {
     ///
     /// A `Paragraph` widget configured for the search functionality.
     pub fn get_search_widget(self, selected: bool) -> Paragraph<'static> {
-        let mut intext;
+        let intext;
         if self.inited == true {
             intext = format!("\u{1F50D} {}", self.input);
         } else {

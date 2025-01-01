@@ -4,6 +4,22 @@ use ratatui::{
     widgets::{Block, Borders, List, ListItem},
 };
 use ratatui::style;
+use crossterm::event::{self, Event, KeyCode};
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct JviewLogs {
+    vertical_offset: usize,
+    horizontal_offset: usize,
+}
+
+impl JviewLogs {
+    pub fn new() -> Self {
+        JviewLogs {
+            vertical_offset: 0,
+            horizontal_offset: 0,
+        }
+    }
+}
 
 pub fn fetch_journalctl_logs() -> Vec<String> {
     let output = Command::new("journalctl")
@@ -72,18 +88,57 @@ pub fn get_log_items(vertical_offset: usize, maxviewer: usize, horizontal_offset
     log_items
 }
 
-/// Creates a configurable widget for displaying a list of items.
-/// 
-/// # Arguments
-/// 
-/// * `items` - A list of items to display in the widget.
-/// * `selected` - 
-/// 
-/// # Returns
-/// 
-/// A `List` widget configured with the provided parameters.
-pub fn get_log_widget<'a>(items: Vec<ListItem<'a>>, selected: bool) -> List<'a> {
-    List::new(items)
-        .block(Block::default().borders(Borders::ALL).title("Journalctl Logs"))
-        .style(get_section_style(selected))
+impl JviewLogs {
+
+    /// Creates a configurable widget for displaying a list of items.
+    ///
+    /// # Arguments
+    ///
+    /// * `items` - A list of items to display in the widget.
+    /// * `selected` -
+    ///
+    /// # Returns
+    ///
+    /// A `List` widget configured with the provided parameters.
+    pub fn get_logs_widget<'b>(&self, items: Vec<ListItem<'b>>, selected: bool) -> List<'b> {
+        List::new(items)
+            .block(Block::default().borders(Borders::ALL).title("Logs"))
+            .style(get_style(selected))
+    }
+
+
+    pub fn logs_navigate(&mut self) -> Result<KeyCode, std::io::Error> {
+        let logs = fetch_journalctl_logs();
+
+        if let Event::Key(key) = event::read()? {
+            match key.code {
+                //KeyCode::Char('q') => return Ok(true),
+                //KeyCode::Char('Q') => return Ok(true),
+                KeyCode::Tab => {
+                    return Ok(KeyCode::Tab);
+                }
+                KeyCode::Up => {
+                    if self.vertical_offset > 0 {
+                        self.vertical_offset -= 1;
+                    }
+                }
+                KeyCode::Down => {
+                    if self.vertical_offset < logs.len() {
+                        self.vertical_offset += 1;
+                    }
+                }
+                KeyCode::Left => {
+                    if self.horizontal_offset > 0 {
+                        self.horizontal_offset -= 1;
+                    }
+                }
+                KeyCode::Right => {
+                    self.horizontal_offset += 1;
+                }
+                _ => {}
+            }
+        }
+
+        Ok(KeyCode::Enter)
+    }
 }

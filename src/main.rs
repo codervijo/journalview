@@ -83,7 +83,7 @@ fn main() -> Result<(), io::Error> {
             // Logs Section
             let mut log_items: Vec<ListItem> = jview_logs::get_log_items(0, viewer_chunks[1].height as usize, 0, screen.get_selected() == Logs);
             //let mut log_items: Vec<ListItem> = jview_logs::get_log_items(vertical_offset, viewer_chunks[1].height as usize, horizontal_offset, screen.get_selected() == Logs);
-            let logs_widget = jview_logs::get_log_widget(log_items, screen.get_selected() == Logs);
+            let logs_widget = screen.get_logs_widget(log_items, screen.get_selected() == Logs);
             f.render_widget(logs_widget, viewer_chunks[1]);
 
             // Help Section
