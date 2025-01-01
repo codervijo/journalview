@@ -1,8 +1,7 @@
 use crossterm::event::{self, Event, KeyCode};
 use ratatui::widgets::Paragraph;
 use ratatui::{
-    style::{Style, Color},
-    widgets::{Block, Borders, List, ListItem},
+    widgets::{List},
 };
 use crate::jview_logs;
 use crate::jview_search;
@@ -65,8 +64,6 @@ impl UiScreen {
 }
 
 pub fn screen_navigate(screen: &mut UiScreen) -> Result<bool, std::io::Error> {
-    let mut vertical_offset = 0;
-    let mut horizontal_offset = 0;
     let logs = jview_logs::fetch_journalctl_logs();
 
     if screen.get_selected() == UiSection::Search {
@@ -94,26 +91,6 @@ pub fn screen_navigate(screen: &mut UiScreen) -> Result<bool, std::io::Error> {
             KeyCode::Tab => {
                 //selected_section = selected_section.next();
                 screen.next_section();
-            }
-            KeyCode::Up => {
-                if screen.get_selected() == UiSection::Logs && vertical_offset > 0 {
-                    vertical_offset -= 1;
-                }
-            }
-            KeyCode::Down => {
-                if screen.get_selected() == UiSection::Logs && vertical_offset < logs.len() {
-                    vertical_offset += 1;
-                }
-            }
-            KeyCode::Left => {
-                if screen.get_selected() == UiSection::Logs && horizontal_offset > 0 {
-                    horizontal_offset -= 1;
-                }
-            }
-            KeyCode::Right => {
-                if screen.get_selected() == UiSection::Logs {
-                    horizontal_offset += 1;
-                }
             }
             _ => {}
         }

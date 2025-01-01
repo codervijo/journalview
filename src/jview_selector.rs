@@ -1,6 +1,6 @@
 use ratatui::{
     style::{Style, Color},
-    widgets::{Block, Borders, Paragraph, List},
+    widgets::{Block, Borders, List},
 };
 use ratatui::widgets::ListItem;
 use ratatui::style;

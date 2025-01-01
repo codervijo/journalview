@@ -2,8 +2,7 @@ use ratatui::{
     style::{Style, Color},
     widgets::{Block, Borders, Paragraph},
 };
-use crossterm::event::{self, Event, KeyCode};
-use std::io;
+use crossterm::event::{self, KeyCode};
 use ratatui::style;
 
 #[derive(Debug, Clone, PartialEq, Eq)]
