@@ -61,6 +61,7 @@ pub fn screen_navigate(screen: &mut UiScreen) -> Result<bool, std::io::Error> {
             screen.next_section();
             return Ok(false);
         }
+        return Ok(false);
     }
 
     if let Event::Key(key) = event::read()? {

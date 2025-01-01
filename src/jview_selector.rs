@@ -7,9 +7,9 @@ use ratatui::style;
 use std::{process::Command};
 
 pub fn fetch_systemd_units() -> Vec<String> {
-    let output = Command::new("systemctl")
-        .args(["list-units", "--all", "--no-pager", "--plain"])
-        .output()
+    let output = Command::new("bash")
+    .args(["-c", "systemctl list-units --all --no-pager --plain | awk '{print $1}'"])
+    .output()
         .expect("Failed to run systemctl command");
 
     if output.status.success() {
