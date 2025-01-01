@@ -106,7 +106,7 @@ impl JviewLogs {
     ///
     /// A `List` widget configured with the provided parameters.
     pub fn get_logs_widget<'b>(&self, selected: bool) -> List<'b> {
-        let mut logitems: Vec<ListItem> = (*self.get_log_items(selected)).to_vec();
+        let logitems: Vec<ListItem> = (*self.get_log_items(selected)).to_vec();
 
         List::new(logitems)
             .block(Block::default().borders(Borders::ALL).title("Logs"))
