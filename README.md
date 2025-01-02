@@ -1,6 +1,6 @@
 # JournalView
 
-A lightweight, terminal-based application written in Rust for efficiently viewing, filtering, and navigating system logs from `journalctl`, Docker, and Podman.
+A lightweight, terminal-based application written in Rust for efficiently viewing, filtering, and navigating system logs from `journalctl`.
 
 ## Features
 
