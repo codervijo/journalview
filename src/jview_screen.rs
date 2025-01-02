@@ -5,6 +5,7 @@ use ratatui::{
 };
 use crate::jview_logs;
 use crate::jview_search;
+use crate::jview_selector;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum UiSection {
@@ -31,6 +32,7 @@ pub struct UiScreen {
     selected: UiSection,
     search_tui: jview_search::JviewSearch,
     logs_tui: jview_logs::JviewLogs,
+    selector_tui: jview_selector::JviewSelector,
 }
 
 impl UiScreen {
@@ -39,6 +41,7 @@ impl UiScreen {
             selected: UiSection::Logs,
             search_tui: jview_search::JviewSearch::new(),
             logs_tui: jview_logs::JviewLogs::new(),
+            selector_tui: jview_selector::JviewSelector::new(),
         }
     }
 
@@ -56,6 +59,10 @@ impl UiScreen {
 
     pub fn get_logs_widget<'a>(&self, selected: bool) -> List<'a> {
         self.logs_tui.clone().get_logs_widget(selected)
+    }
+
+    pub fn get_selector_widget(&self, selected: bool) -> List {
+        self.selector_tui.clone().get_selector_widget(selected)
     }
 
     pub fn set_logs_max_height(&mut self, h: usize) {

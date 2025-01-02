@@ -72,7 +72,7 @@ fn main() -> Result<(), io::Error> {
                 .split(overall_layout[2])[0]; // Apply to the whole width
 
             // Draw the left column selector
-            let selwidget = jview_selector::get_widget(screen.get_selected() == Selector);
+            let selwidget = screen.get_selector_widget(screen.get_selected() == Selector);
             f.render_widget(selwidget, selection_chunks[0]);
 
             // Search Section
