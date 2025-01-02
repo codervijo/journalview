@@ -5,11 +5,12 @@ use ratatui::{
 use crossterm::event::{self, Event, KeyCode};
 use std::{cmp, process::Command};
 
-#[derive(Debug, Clone, PartialEq, Eq, Copy)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct JviewSelector {
     vertical_offset: usize,
     horizontal_offset: usize,
     max_viewer_height: usize,
+    units: Vec<String>,
 }
 
 impl JviewSelector {
@@ -18,6 +19,7 @@ impl JviewSelector {
             vertical_offset: 0,
             horizontal_offset: 0,
             max_viewer_height: 25,
+            units: fetch_systemd_units(),
         }
     }
 
@@ -32,7 +34,7 @@ impl JviewSelector {
     /// * `direction` - Movement direction, `1` for down, `-1` for up.
     /// * `list_len` - Total number of items in the list.
     pub fn navigate(&mut self) -> Result<KeyCode, std::io::Error> {
-        let list_len = 20;//list_len as isize;
+        let list_len = self.units.len();
         //let new_offset = self.vertical_offset as isize + direction;
 
         // Wrap around or clamp the offset within the valid range
@@ -51,7 +53,7 @@ impl JviewSelector {
                     }
                 }
                 KeyCode::Down => {
-                    if self.vertical_offset < list_len {
+                    if self.vertical_offset < list_len - 1 {
                         self.vertical_offset += 1;
                     }
                 }
@@ -64,6 +66,19 @@ impl JviewSelector {
                     self.horizontal_offset += 1;
                 }
                 _ => {}
+            }
+
+            // Windowing Logic:
+            // Adjust the window to ensure the currently selected item stays in view
+
+            if self.vertical_offset >= self.max_viewer_height {
+                // If the cursor goes below the visible area, scroll the window down
+                self.vertical_offset = self.max_viewer_height - 1;
+            }
+
+            // Ensure the window doesn't go beyond the available items
+            if self.vertical_offset + self.max_viewer_height > list_len {
+                self.vertical_offset = list_len - self.max_viewer_height;
             }
         }
         Ok(KeyCode::Enter)
@@ -80,9 +95,10 @@ impl JviewSelector {
     ///
     /// A `List` widget configured for the systemd units.
     pub fn get_selector_widget(&self, selected: bool) -> List<'static> {
-        let units = fetch_systemd_units();
-        let items: Vec<ListItem> = units
+        let items: Vec<ListItem> = self.units.clone()
             .into_iter()
+            .skip(self.vertical_offset)  // Skip the first `vertical_offset` items
+            .take(self.max_viewer_height) // Only take `max_viewer_height` items
             .enumerate()
             .map(|(i, unit)| {
                 let style = if i == self.vertical_offset {

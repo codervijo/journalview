@@ -27,7 +27,6 @@ fn main() -> Result<(), io::Error> {
     execute!(stdout, EnterAlternateScreen)?;
     let backend = CrosstermBackend::new(stdout);
     let mut terminal = Terminal::new(backend)?;
-    //let mut selected_section = Search; // 0: Search, 1: Logs, 2: Selection
     let mut screen = UiScreen::new(); // Persistent screen state
 
     loop {
