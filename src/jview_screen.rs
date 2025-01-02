@@ -89,6 +89,15 @@ pub fn screen_navigate(screen: &mut UiScreen) -> Result<bool, std::io::Error> {
         return Ok(false);
     }
 
+    if screen.get_selected() == UiSection::Selector {
+        let res = screen.selector_tui.navigate()?;
+        if res == KeyCode::Tab {
+            screen.next_section();
+            return Ok(false);
+        }
+        return Ok(false);
+    }
+
     if let Event::Key(key) = event::read()? {
         match key.code {
             KeyCode::Char('q') => return Ok(true),
