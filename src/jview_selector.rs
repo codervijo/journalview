@@ -35,6 +35,7 @@ impl JviewSelector {
     /// * `list_len` - Total number of items in the list.
     pub fn navigate(&mut self) -> Result<KeyCode, std::io::Error> {
         let list_len = self.units.len();
+
         //let new_offset = self.vertical_offset as isize + direction;
 
         // Wrap around or clamp the offset within the valid range
@@ -48,17 +49,17 @@ impl JviewSelector {
                     return Ok(KeyCode::Tab);
                 }
                 KeyCode::Up => {
-                    if self.vertical_offset > 0 {
+                    if list_len > 0 && self.vertical_offset > 0 {
                         self.vertical_offset -= 1;
                     }
                 }
                 KeyCode::Down => {
-                    if self.vertical_offset < list_len - 1 {
+                    if list_len > 0 && self.vertical_offset < list_len - 1 {
                         self.vertical_offset += 1;
                     }
                 }
                 KeyCode::Left => {
-                    if self.horizontal_offset > 0 {
+                    if list_len > 0 && self.horizontal_offset > 0 {
                         self.horizontal_offset -= 1;
                     }
                 }
@@ -77,7 +78,7 @@ impl JviewSelector {
             }
 
             // Ensure the window doesn't go beyond the available items
-            if self.vertical_offset + self.max_viewer_height > list_len {
+            if list_len > 0 && self.vertical_offset + self.max_viewer_height > list_len {
                 self.vertical_offset = list_len - self.max_viewer_height;
             }
         }
