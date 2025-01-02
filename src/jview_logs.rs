@@ -107,8 +107,8 @@ impl JviewLogs {
 
         if let Event::Key(key) = event::read()? {
             match key.code {
-                //KeyCode::Char('q') => return Ok(true),
-                //KeyCode::Char('Q') => return Ok(true),
+                KeyCode::Char('q') => return Ok(KeyCode::Char('q')),
+                KeyCode::Char('Q') => return Ok(KeyCode::Char('q')),
                 KeyCode::Tab => {
                     return Ok(KeyCode::Tab);
                 }

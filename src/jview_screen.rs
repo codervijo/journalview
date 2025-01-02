@@ -1,4 +1,4 @@
-use crossterm::event::{self, Event, KeyCode};
+use crossterm::event::{self, KeyCode};
 use ratatui::widgets::Paragraph;
 use ratatui::{
     widgets::{List},
@@ -82,32 +82,30 @@ pub fn screen_navigate(screen: &mut UiScreen) -> Result<bool, std::io::Error> {
 
     if screen.get_selected() == UiSection::Logs {
         let res = screen.logs_tui.logs_navigate()?;
-        if res == KeyCode::Tab {
-            screen.next_section();
-            return Ok(false);
+        match res {
+            KeyCode::Char('q') => return Ok(true),
+            KeyCode::Char('Q') => return Ok(true),
+            KeyCode::Tab => {
+                screen.next_section();
+                return Ok(false);
+            }
+            _ => {}
         }
         return Ok(false);
     }
 
     if screen.get_selected() == UiSection::Selector {
         let res = screen.selector_tui.navigate()?;
-        if res == KeyCode::Tab {
-            screen.next_section();
-            return Ok(false);
-        }
-        return Ok(false);
-    }
-
-    if let Event::Key(key) = event::read()? {
-        match key.code {
+        match res {
             KeyCode::Char('q') => return Ok(true),
             KeyCode::Char('Q') => return Ok(true),
             KeyCode::Tab => {
-                //selected_section = selected_section.next();
                 screen.next_section();
+                return Ok(false);
             }
             _ => {}
         }
+        return Ok(false);
     }
 
     Ok(false)
