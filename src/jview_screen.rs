@@ -68,14 +68,23 @@ impl UiScreen {
     pub fn set_logs_max_height(&mut self, h: usize) {
         self.logs_tui.clone().set_max_height(h);
     }
+
+    pub fn set_selector_max_height(&mut self, h: usize) {
+        self.selector_tui.clone().set_max_height(h);
+    }
 }
 
 pub fn screen_navigate(screen: &mut UiScreen) -> Result<bool, std::io::Error> {
     if screen.get_selected() == UiSection::Search {
         let res = screen.search_tui.get_search_input()?;
-        if res == KeyCode::Tab {
-            screen.next_section();
-            return Ok(false);
+        match res {
+            KeyCode::Char('q') => return Ok(true),
+            KeyCode::Char('Q') => return Ok(true),
+            KeyCode::Tab => {
+                screen.next_section();
+                return Ok(false);
+            }
+            _ => {}
         }
         return Ok(false);
     }

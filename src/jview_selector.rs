@@ -8,7 +8,7 @@ use std::{cmp, process::Command};
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct JviewSelector {
     vertical_start: usize,
-    horizontal_offset: usize,
+    horizontal_start: usize,
     max_viewer_height: usize,
     units: Vec<String>,
 }
@@ -17,7 +17,7 @@ impl JviewSelector {
     pub fn new() -> Self {
         JviewSelector {
             vertical_start: 0,
-            horizontal_offset: 0,
+            horizontal_start: 0,
             max_viewer_height: 20,
             units: fetch_systemd_units(),
         }
@@ -26,6 +26,31 @@ impl JviewSelector {
     pub fn set_max_height(&mut self, h: usize) {
         self.max_viewer_height = h;
     }
+
+    fn get_visible_units(&self) -> Vec<String> {
+        let mut vitems: Vec<String> = Vec::new(); // Viewable units
+
+        for (i, line) in self.units.iter().enumerate() {
+            if i < self.vertical_start {
+                continue; // Skip lines until the vertical offset
+            }
+
+            if vitems.len() >= self.max_viewer_height {
+                break; // Stop if we've taken enough lines to fit the section
+            }
+
+            let visible_line = if line.len() > self.horizontal_start {
+                &line[self.horizontal_start..]
+            } else {
+                ""
+            };
+
+            vitems.push(visible_line.to_string());
+        }
+
+        vitems
+    }
+
 
     /// Navigate the list vertically based on user input.
     ///
@@ -59,28 +84,16 @@ impl JviewSelector {
                     }
                 }
                 KeyCode::Left => {
-                    if list_len > 0 && self.horizontal_offset > 0 {
-                        self.horizontal_offset -= 1;
+                    if list_len > 0 && self.horizontal_start > 0 {
+                        self.horizontal_start -= 1;
                     }
                 }
                 KeyCode::Right => {
-                    self.horizontal_offset += 1;
+                    self.horizontal_start += 1;
                 }
                 _ => {}
             }
 
-            // Windowing Logic:
-            // Adjust the window to ensure the currently selected item stays in view
-
-            if self.vertical_start >= self.max_viewer_height {
-                // If the cursor goes below the visible area, scroll the window down
-                self.vertical_start = self.max_viewer_height - 1;
-            }
-
-            // Ensure the window doesn't go beyond the available items
-            if list_len > 0 && self.vertical_start + self.max_viewer_height > list_len {
-                self.vertical_start = list_len - self.max_viewer_height;
-            }
         }
         Ok(KeyCode::Enter)
 
@@ -96,10 +109,9 @@ impl JviewSelector {
     ///
     /// A `List` widget configured for the systemd units.
     pub fn get_selector_widget(&self, selected: bool) -> List<'static> {
-        let items: Vec<ListItem> = self.units.clone()
+        let vunits = self.get_visible_units();
+        let items: Vec<ListItem> = vunits
             .into_iter()
-            .skip(self.vertical_start)  // Skip the first `vertical_offset` items
-            .take(self.max_viewer_height) // Only take `max_viewer_height` items
             .enumerate()
             .map(|(i, unit)| {
                 let style = if i == self.vertical_start {
@@ -107,6 +119,7 @@ impl JviewSelector {
                 } else {
                     get_style(selected)
                 };
+
                 ListItem::new(unit).style(style)
             })
             .collect();
