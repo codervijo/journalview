@@ -1,4 +1,4 @@
-use crossterm::event::{self, KeyCode};
+use crossterm::event::KeyCode;
 use ratatui::widgets::Paragraph;
 use ratatui::{
     widgets::{List},

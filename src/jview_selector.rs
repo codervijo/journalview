@@ -3,7 +3,7 @@ use ratatui::{
     widgets::{Block, Borders, List, ListItem},
 };
 use crossterm::event::{self, Event, KeyCode};
-use std::{cmp, process::Command};
+use std::process::Command;
 use crate::jview_config;
 use crate::jview_config::settings;
 
@@ -22,7 +22,7 @@ impl JviewSelector {
             selected_idx: 0,
             vertical_start: 0,
             horizontal_start: 0,
-            max_viewer_height: 20,
+            max_viewer_height: 15,
             units: fetch_systemd_units(),
         }
     }
@@ -60,15 +60,8 @@ impl JviewSelector {
     ///
     /// # Arguments
     ///
-    /// * `direction` - Movement direction, `1` for down, `-1` for up.
-    /// * `list_len` - Total number of items in the list.
     pub fn navigate(&mut self) -> Result<KeyCode, std::io::Error> {
         let list_len = self.units.len();
-
-        //let new_offset = self.vertical_offset as isize + direction;
-
-        // Wrap around or clamp the offset within the valid range
-       // self.vertical_offset = cmp::max(0, cmp::min(list_len - 1, new_offset)) as usize;
 
         if let Event::Key(key) = event::read()? {
             match key.code {
@@ -82,16 +75,18 @@ impl JviewSelector {
                     return Ok(KeyCode::Tab);
                 }
                 KeyCode::Up => {
-                    if list_len > 0 && self.vertical_start > 0 {
+                    if self.vertical_start > 0 {
                         self.vertical_start -= 1;
                     }
-                    self.selected_idx -= 1;
+                    if self.selected_idx > 0 {
+                        self.selected_idx -= 1;
+                    }
                 }
                 KeyCode::Down => {
-                    if list_len > 0 && self.vertical_start < list_len - 1 {
+                    self.selected_idx += 1;
+                    if self.selected_idx >= self.max_viewer_height-4 {
                         self.vertical_start += 1;
                     }
-                    self.selected_idx += 1;
                 }
                 KeyCode::Left => {
                     if list_len > 0 && self.horizontal_start > 0 {
@@ -124,7 +119,7 @@ impl JviewSelector {
             .into_iter()
             .enumerate()
             .map(|(i, unit)| {
-                let style = if i == self.selected_idx {
+                let style = if (i + self.vertical_start) == self.selected_idx {
                     Style::default().fg(Color::Black).bg(Color::Cyan)
                 } else {
                     get_style(selected)
