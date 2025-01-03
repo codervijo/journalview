@@ -5,6 +5,9 @@ use ratatui::{
 };
 use ratatui::style;
 use crossterm::event::{self, Event, KeyCode};
+use crate::jview_config;
+use crate::jview_config::settings;
+use crate::jview_debug;
 
 #[derive(Debug, Clone, PartialEq, Eq, Copy)]
 pub struct JviewLogs {
@@ -30,12 +33,25 @@ impl JviewLogs {
 }
 
 pub fn fetch_journalctl_logs() -> Vec<String> {
+    let chosen = settings::get_unit();
+    let mut jargs = vec![];
+
+    if !chosen.is_empty() {
+        jview_debug::log_debug_info("Found Selected Unit to filter:", format_args!("{}", chosen));
+        jargs.push("-u".to_string());
+        jargs.push(chosen);
+    } else {
+        jargs.push("--since=yesterday".to_string());
+    }
+
+    jview_debug::log_debug_info("Doing command:", format_args!("{:?}", jargs));
     let output = Command::new("journalctl")
-        .arg("--since=yesterday")
+        .args(&jargs)
         .output()
         .expect("Failed to run journalctl command");
 
     if output.status.success() {
+        jview_debug::log_debug_info("Command output: ", format_args!("{}", String::from_utf8_lossy(&output.stdout)));
         String::from_utf8_lossy(&output.stdout)
             .lines()
             .map(|line| line.to_string())
@@ -117,11 +133,13 @@ impl JviewLogs {
                     if self.vertical_start > 0 {
                         self.vertical_start -= 1;
                     }
+                    settings::clear_unit();
                 }
                 KeyCode::Down => {
                     if self.vertical_start < logs.len() {
                         self.vertical_start += 1;
                     }
+                    settings::clear_unit();
                 }
                 KeyCode::Left => {
                     if self.horizontal_start > 0 {

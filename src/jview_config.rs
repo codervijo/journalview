@@ -26,6 +26,12 @@ pub mod settings {
         unit.clone()
     }
 
+    /// Clear the unit
+    pub fn clear_unit() {
+        let mut unit = UNIT.lock().unwrap();
+        *unit = String::new(); // Clear the content
+    }
+
     /// Set the maximum number of connections
     pub fn set_max_connections(value: usize) {
         MAX_CONNECTIONS.store(value, Ordering::SeqCst);
