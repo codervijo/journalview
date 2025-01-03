@@ -62,7 +62,6 @@ impl JviewSelector {
     /// # Arguments
     ///
     pub fn navigate(&mut self) -> Result<KeyCode, std::io::Error> {
-        let list_len = self.units.len();
 
         if let Event::Key(key) = event::read()? {
             match key.code {
@@ -92,7 +91,7 @@ impl JviewSelector {
                     }
                 }
                 KeyCode::Left => {
-                    if list_len > 0 && self.horizontal_start > 0 {
+                    if self.horizontal_start > 0 {
                         self.horizontal_start -= 1;
                     }
                 }
