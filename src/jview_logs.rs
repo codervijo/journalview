@@ -8,17 +8,19 @@ use crossterm::event::{self, Event, KeyCode};
 
 #[derive(Debug, Clone, PartialEq, Eq, Copy)]
 pub struct JviewLogs {
-    vertical_offset: usize,
-    horizontal_offset: usize,
+    vertical_start: usize,
+    horizontal_start: usize,
     max_viewer_height: usize,
+    max_viewer_width: usize,
 }
 
 impl JviewLogs {
     pub fn new() -> Self {
         JviewLogs {
-            vertical_offset: 0,
-            horizontal_offset: 0,
+            vertical_start: 0,
+            horizontal_start: 0,
             max_viewer_height: 25,
+            max_viewer_width: 25,
         }
     }
 
@@ -56,12 +58,12 @@ pub fn get_style(selected: bool) -> style::Style {
 }
 
 impl JviewLogs {
-    pub fn get_log_items(self, selected: bool) -> Vec<ListItem<'static>> {
+    fn get_log_items(self, selected: bool) -> Vec<ListItem<'static>> {
         let logs = fetch_journalctl_logs();
-        let mut log_items: Vec<ListItem> = Vec::new();
+        let mut log_items: Vec<ListItem> = Vec::new(); // Viewable
 
         for (i, line) in logs.iter().enumerate() {
-            if i < self.vertical_offset {
+            if i < self.vertical_start {
                 continue; // Skip lines until the vertical offset
             }
 
@@ -69,8 +71,8 @@ impl JviewLogs {
                 break; // Stop if we've taken enough lines to fit the section
             }
 
-            let visible_line = if line.len() > self.horizontal_offset {
-                &line[self.horizontal_offset..]
+            let visible_line = if line.len() > self.horizontal_start {
+                &line[self.horizontal_start..]
             } else {
                 ""
             };
@@ -87,7 +89,6 @@ impl JviewLogs {
     ///
     /// # Arguments
     ///
-    /// * `items` - A list of items to display in the widget.
     /// * `selected` -
     ///
     /// # Returns
@@ -113,22 +114,22 @@ impl JviewLogs {
                     return Ok(KeyCode::Tab);
                 }
                 KeyCode::Up => {
-                    if self.vertical_offset > 0 {
-                        self.vertical_offset -= 1;
+                    if self.vertical_start > 0 {
+                        self.vertical_start -= 1;
                     }
                 }
                 KeyCode::Down => {
-                    if self.vertical_offset < logs.len() {
-                        self.vertical_offset += 1;
+                    if self.vertical_start < logs.len() {
+                        self.vertical_start += 1;
                     }
                 }
                 KeyCode::Left => {
-                    if self.horizontal_offset > 0 {
-                        self.horizontal_offset -= 1;
+                    if self.horizontal_start > 0 {
+                        self.horizontal_start -= 1;
                     }
                 }
                 KeyCode::Right => {
-                    self.horizontal_offset += 1;
+                    self.horizontal_start += 1;
                 }
                 _ => {}
             }

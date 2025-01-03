@@ -7,7 +7,7 @@ use std::{cmp, process::Command};
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct JviewSelector {
-    vertical_offset: usize,
+    vertical_start: usize,
     horizontal_offset: usize,
     max_viewer_height: usize,
     units: Vec<String>,
@@ -16,9 +16,9 @@ pub struct JviewSelector {
 impl JviewSelector {
     pub fn new() -> Self {
         JviewSelector {
-            vertical_offset: 0,
+            vertical_start: 0,
             horizontal_offset: 0,
-            max_viewer_height: 25,
+            max_viewer_height: 20,
             units: fetch_systemd_units(),
         }
     }
@@ -49,13 +49,13 @@ impl JviewSelector {
                     return Ok(KeyCode::Tab);
                 }
                 KeyCode::Up => {
-                    if list_len > 0 && self.vertical_offset > 0 {
-                        self.vertical_offset -= 1;
+                    if list_len > 0 && self.vertical_start > 0 {
+                        self.vertical_start -= 1;
                     }
                 }
                 KeyCode::Down => {
-                    if list_len > 0 && self.vertical_offset < list_len - 1 {
-                        self.vertical_offset += 1;
+                    if list_len > 0 && self.vertical_start < list_len - 1 {
+                        self.vertical_start += 1;
                     }
                 }
                 KeyCode::Left => {
@@ -72,14 +72,14 @@ impl JviewSelector {
             // Windowing Logic:
             // Adjust the window to ensure the currently selected item stays in view
 
-            if self.vertical_offset >= self.max_viewer_height {
+            if self.vertical_start >= self.max_viewer_height {
                 // If the cursor goes below the visible area, scroll the window down
-                self.vertical_offset = self.max_viewer_height - 1;
+                self.vertical_start = self.max_viewer_height - 1;
             }
 
             // Ensure the window doesn't go beyond the available items
-            if list_len > 0 && self.vertical_offset + self.max_viewer_height > list_len {
-                self.vertical_offset = list_len - self.max_viewer_height;
+            if list_len > 0 && self.vertical_start + self.max_viewer_height > list_len {
+                self.vertical_start = list_len - self.max_viewer_height;
             }
         }
         Ok(KeyCode::Enter)
@@ -98,11 +98,11 @@ impl JviewSelector {
     pub fn get_selector_widget(&self, selected: bool) -> List<'static> {
         let items: Vec<ListItem> = self.units.clone()
             .into_iter()
-            .skip(self.vertical_offset)  // Skip the first `vertical_offset` items
+            .skip(self.vertical_start)  // Skip the first `vertical_offset` items
             .take(self.max_viewer_height) // Only take `max_viewer_height` items
             .enumerate()
             .map(|(i, unit)| {
-                let style = if i == self.vertical_offset {
+                let style = if i == self.vertical_start {
                     Style::default().fg(Color::Black).bg(Color::Cyan)
                 } else {
                     get_style(selected)

@@ -455,6 +455,7 @@ name = "jview"
 version = "0.1.0"
 dependencies = [
  "crossterm 0.24.0",
+ "lazy_static",
  "ratatui",
 ]
 
