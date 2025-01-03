@@ -14,6 +14,7 @@ mod jview_logs;
 mod jview_search;
 mod jview_selector;
 mod jview_help;
+mod jview_config;
 
 use crate::jview_screen::UiScreen;
 use crate::jview_screen::UiSection::Search;

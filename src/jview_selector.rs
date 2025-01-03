@@ -4,9 +4,12 @@ use ratatui::{
 };
 use crossterm::event::{self, Event, KeyCode};
 use std::{cmp, process::Command};
+use crate::jview_config;
+use crate::jview_config::settings;
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct JviewSelector {
+    selected_idx: usize,
     vertical_start: usize,
     horizontal_start: usize,
     max_viewer_height: usize,
@@ -16,6 +19,7 @@ pub struct JviewSelector {
 impl JviewSelector {
     pub fn new() -> Self {
         JviewSelector {
+            selected_idx: 0,
             vertical_start: 0,
             horizontal_start: 0,
             max_viewer_height: 20,
@@ -73,15 +77,21 @@ impl JviewSelector {
                 KeyCode::Tab => {
                     return Ok(KeyCode::Tab);
                 }
+                KeyCode::Enter => {
+                    settings::set_unit(&self.units[self.selected_idx]);
+                    return Ok(KeyCode::Tab);
+                }
                 KeyCode::Up => {
                     if list_len > 0 && self.vertical_start > 0 {
                         self.vertical_start -= 1;
                     }
+                    self.selected_idx -= 1;
                 }
                 KeyCode::Down => {
                     if list_len > 0 && self.vertical_start < list_len - 1 {
                         self.vertical_start += 1;
                     }
+                    self.selected_idx += 1;
                 }
                 KeyCode::Left => {
                     if list_len > 0 && self.horizontal_start > 0 {
@@ -114,7 +124,7 @@ impl JviewSelector {
             .into_iter()
             .enumerate()
             .map(|(i, unit)| {
-                let style = if i == self.vertical_start {
+                let style = if i == self.selected_idx {
                     Style::default().fg(Color::Black).bg(Color::Cyan)
                 } else {
                     get_style(selected)
@@ -139,7 +149,10 @@ fn fetch_systemd_units() -> Vec<String> {
         .args(["-c", "systemctl list-units --all --no-pager --plain | awk '{print $1}'"])
         .output()
         .expect("Failed to run systemctl command");
-
+    /*
+        Use this in the future and use json output
+        systemctl list-units --all --plain --no-legend --no-pager --output=json
+    */
     if output.status.success() {
         String::from_utf8_lossy(&output.stdout)
             .lines()
