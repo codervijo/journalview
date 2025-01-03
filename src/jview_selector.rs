@@ -146,7 +146,7 @@ impl JviewSelector {
 
 fn fetch_systemd_units() -> Vec<String> {
     let output = Command::new("bash")
-        .args(["-c", "systemctl list-units --all --no-pager --plain | awk '{print $1}'"])
+        .args(["-c", "systemctl list-units --all --no-pager --plain | awk '{print $1}'|grep '.service'"])
         .output()
         .expect("Failed to run systemctl command");
     /*
