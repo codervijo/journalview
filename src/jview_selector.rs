@@ -6,6 +6,7 @@ use crossterm::event::{self, Event, KeyCode};
 use std::process::Command;
 use crate::jview_config;
 use crate::jview_config::settings;
+use crate::jview_debug;
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct JviewSelector {
@@ -72,6 +73,8 @@ impl JviewSelector {
                 }
                 KeyCode::Enter => {
                     settings::set_unit(&self.units[self.selected_idx]);
+                    jview_debug::log_debug_info("Selected Unit ID to filter: ", format_args!("{}", self.selected_idx));
+                    jview_debug::log_debug_info("Selected Unit to filter:", format_args!("{}", self.units[self.selected_idx]));
                     return Ok(KeyCode::Tab);
                 }
                 KeyCode::Up => {

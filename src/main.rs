@@ -15,6 +15,7 @@ mod jview_search;
 mod jview_selector;
 mod jview_help;
 mod jview_config;
+mod jview_debug;
 
 use crate::jview_screen::UiScreen;
 use crate::jview_screen::UiSection::Search;
@@ -30,6 +31,8 @@ fn main() -> Result<(), io::Error> {
     let mut terminal = Terminal::new(backend)?;
     let mut screen = UiScreen::new(); // Persistent screen state
 
+    jview_debug::init_debug_log();
+    jview_debug::log_debug_info("Starting journalview", format_args!(""));
     loop {
         terminal.draw(|f| {
             // Define the layout with two main sections: Left and Right
