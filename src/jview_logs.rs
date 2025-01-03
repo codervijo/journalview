@@ -51,7 +51,7 @@ pub fn fetch_journalctl_logs() -> Vec<String> {
         .expect("Failed to run journalctl command");
 
     if output.status.success() {
-        jview_debug::log_debug_info("Command output: ", format_args!("{}", String::from_utf8_lossy(&output.stdout)));
+        //jview_debug::log_debug_info("Command output: ", format_args!("{}", String::from_utf8_lossy(&output.stdout)));
         String::from_utf8_lossy(&output.stdout)
             .lines()
             .map(|line| line.to_string())
@@ -133,13 +133,11 @@ impl JviewLogs {
                     if self.vertical_start > 0 {
                         self.vertical_start -= 1;
                     }
-                    settings::clear_unit();
                 }
                 KeyCode::Down => {
                     if self.vertical_start < logs.len() {
                         self.vertical_start += 1;
                     }
-                    settings::clear_unit();
                 }
                 KeyCode::Left => {
                     if self.horizontal_start > 0 {

@@ -83,12 +83,16 @@ impl JviewSelector {
                     if self.selected_idx > 0 {
                         self.selected_idx -= 1;
                     }
+                    jview_debug::log_debug_info("Clearing unit 1", format_args!("{:?}", key.code));
+                    settings::clear_unit();
                 }
                 KeyCode::Down => {
                     self.selected_idx += 1;
                     if self.selected_idx >= self.max_viewer_height-4 {
                         self.vertical_start += 1;
                     }
+                    jview_debug::log_debug_info("Clearing unit 2", format_args!("{:?}", key.code));
+                    settings::clear_unit();
                 }
                 KeyCode::Left => {
                     if self.horizontal_start > 0 {
