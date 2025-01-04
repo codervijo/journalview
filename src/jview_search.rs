@@ -64,7 +64,7 @@ impl JviewSearch {
                     return Ok(KeyCode::Tab); // Escape to stop input
                 }
                 KeyCode::Backspace => {
-                    input.pop(); // Remove last character
+                    self.input.pop(); // Remove last character
                 }
                 KeyCode::Enter => {
                     return Ok(KeyCode::Tab); // Enter to submit input
