@@ -130,8 +130,11 @@ impl JviewSelector {
                 } else {
                     get_style(selected)
                 };
-                if (i+self.vertical_start) == self.selected_idx {
+                if settings::get_unit() == unit {
                     let su = format!("\u{2714} {}", unit);
+                    ListItem::new(su).style(style)
+                } else if (i+self.vertical_start) == self.selected_idx {
+                    let su = format!("\u{2713} {}", unit);
                     ListItem::new(su).style(style)
                 } else {
                     ListItem::new(unit).style(style)
