@@ -130,8 +130,12 @@ impl JviewSelector {
                 } else {
                     get_style(selected)
                 };
-
-                ListItem::new(unit).style(style)
+                if (i+self.vertical_start) == self.selected_idx {
+                    let su = format!("\u{2714} {}", unit);
+                    ListItem::new(su).style(style)
+                } else {
+                    ListItem::new(unit).style(style)
+                }
             })
             .collect();
 
@@ -155,10 +159,16 @@ fn fetch_systemd_units() -> Vec<String> {
         systemctl list-units --all --plain --no-legend --no-pager --output=json
     */
     if output.status.success() {
-        String::from_utf8_lossy(&output.stdout)
-            .lines()
-            .map(|line| line.to_string())
-            .collect()
+        let mut result = Vec::new();
+
+        for line in String::from_utf8_lossy(&output.stdout).lines() {
+            if line.contains(".service") {
+                result.push(line.replace(".service", ""));
+            } else {
+                result.push(line.to_string())
+            }
+        }
+        result
     } else {
         vec!["<All Systemd units>".to_string()]
     }
