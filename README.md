@@ -2,6 +2,8 @@
 
 A lightweight, terminal-based application written in Rust for efficiently viewing, filtering, and navigating system logs from `journalctl`.
 
+![jview1](https://github.com/user-attachments/assets/78a97592-1c5e-4f34-ba42-dc8bf5d8b573)
+
 ## Features
 
 - **Log Viewing**: Access logs from `journalctl` logs.
