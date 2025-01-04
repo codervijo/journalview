@@ -66,11 +66,11 @@ impl UiScreen {
     }
 
     pub fn set_logs_max_height(&mut self, h: usize) {
-        self.logs_tui.clone().set_max_height(h);
+        self.logs_tui.set_max_height(h);
     }
 
     pub fn set_selector_max_height(&mut self, h: usize) {
-        self.selector_tui.clone().set_max_height(h);
+        self.selector_tui.set_max_height(h);
     }
 }
 
