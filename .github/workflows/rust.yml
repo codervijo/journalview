@@ -37,7 +37,7 @@ jobs:
 
           for arch in "${architectures[@]}"; do
               cross build --target x86_64-unknown-linux-musl
-              mv target/x86_64-unknown-linux-gnu/debug/journalview bin/journalview-$version-linux-$arch
+              mv target/x86_64-unknown-linux-musl/debug/journalview bin/journalview-$version-linux-$arch
           done
 
           echo "ARTIFACT_NAME=journalview-$(date +'%d.%m.%Y')" >> $GITHUB_ENV
