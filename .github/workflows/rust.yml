@@ -36,22 +36,22 @@ jobs:
 
           for arch in "${architectures[@]}"; do
               cargo build --release --target x86_64-unknown-linux-gnu
-              mv target/x86_64-unknown-linux-gnu/release/my_rust_program bin/my_rust_program-$version-linux-$arch
+              mv target/x86_64-unknown-linux-gnu/release/journalview bin/journalview-$version-linux-$arch
 
               cargo build --release --target aarch64-unknown-linux-gnu
-              mv target/aarch64-unknown-linux-gnu/release/my_rust_program bin/my_rust_program-$version-linux-$arch
+              mv target/aarch64-unknown-linux-gnu/release/journalview bin/journalview-$version-linux-$arch
 
               cargo build --release --target x86_64-apple-darwin
-              mv target/x86_64-apple-darwin/release/my_rust_program bin/my_rust_program-$version-darwin-$arch
+              mv target/x86_64-apple-darwin/release/journalview bin/journalview-$version-darwin-$arch
 
               cargo build --release --target aarch64-apple-darwin
-              mv target/aarch64-apple-darwin/release/my_rust_program bin/my_rust_program-$version-darwin-$arch
+              mv target/aarch64-apple-darwin/release/journalview bin/journalview-$version-darwin-$arch
 
               cargo build --release --target x86_64-pc-windows-gnu
-              mv target/x86_64-pc-windows-gnu/release/my_rust_program.exe bin/my_rust_program-$version-windows-$arch.exe
+              mv target/x86_64-pc-windows-gnu/release/journalview.exe bin/journalview-$version-windows-$arch.exe
           done
 
-          echo "ARTIFACT_NAME=my_rust_program-$(date +'%d.%m.%Y')" >> $GITHUB_ENV
+          echo "ARTIFACT_NAME=journalview-$(date +'%d.%m.%Y')" >> $GITHUB_ENV
 
       - name: Upload Binaries
         uses: actions/upload-artifact@v4
