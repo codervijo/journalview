@@ -84,8 +84,8 @@ Contributions are welcome! Follow these steps to contribute:
 ## Acknoweldgements
 
 Thanks to the following projects
-- [text](https://github.com/ratatui/ratatui)
-- [text](https://github.com/Lifailon/lazyjournal)
+- [Ratatui](https://github.com/ratatui/ratatui)
+- [Lazyjournal](https://github.com/Lifailon/lazyjournal)
 
 ## License
 
