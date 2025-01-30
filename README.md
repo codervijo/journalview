@@ -81,6 +81,12 @@ Contributions are welcome! Follow these steps to contribute:
    ```
 5. Open a Pull Request.
 
+## Acknoweldgements
+
+Thanks to the following projects
+- [text](https://github.com/ratatui/ratatui)
+- [text](https://github.com/Lifailon/lazyjournal)
+
 ## License
 
 This project is licensed under the [MIT License](LICENSE).
