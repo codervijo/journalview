@@ -32,23 +32,11 @@ jobs:
           version="${{ github.event.inputs.version }}"
           [ -z "$version" ] && version="latest"
           mkdir -p bin
-          architectures=("x86_64" "aarch64")
+          architectures=("x86_64")
 
           for arch in "${architectures[@]}"; do
               cargo build --release --target x86_64-unknown-linux-gnu
               mv target/x86_64-unknown-linux-gnu/release/journalview bin/journalview-$version-linux-$arch
-
-              cargo build --release --target aarch64-unknown-linux-gnu
-              mv target/aarch64-unknown-linux-gnu/release/journalview bin/journalview-$version-linux-$arch
-
-              cargo build --release --target x86_64-apple-darwin
-              mv target/x86_64-apple-darwin/release/journalview bin/journalview-$version-darwin-$arch
-
-              cargo build --release --target aarch64-apple-darwin
-              mv target/aarch64-apple-darwin/release/journalview bin/journalview-$version-darwin-$arch
-
-              cargo build --release --target x86_64-pc-windows-gnu
-              mv target/x86_64-pc-windows-gnu/release/journalview.exe bin/journalview-$version-windows-$arch.exe
           done
 
           echo "ARTIFACT_NAME=journalview-$(date +'%d.%m.%Y')" >> $GITHUB_ENV
