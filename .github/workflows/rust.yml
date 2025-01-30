@@ -5,13 +5,18 @@ on:
     branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'The version of the release'
+        required: false
+        default: 'latest'
 
 env:
   CARGO_TERM_COLOR: always
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     steps:
@@ -30,20 +35,46 @@ jobs:
 
       - name: Build Binaries
         run: |
+          # Get version from event input, default to 'latest' if not provided
           version="${{ github.event.inputs.version }}"
           [ -z "$version" ] && version="latest"
-          mkdir -p bin
-          architectures=("x86_64")
 
+          # Create bin directory
+          mkdir -p bin
+
+          # Define architectures for cross-compilation
+          architectures=("x86_64-unknown-linux-musl" "aarch64-unknown-linux-musl" "x86_64-apple-darwin" "aarch64-apple-darwin" "x86_64-pc-windows-gnu" "aarch64-pc-windows-msvc")
+
+          # Build binaries for each architecture
           for arch in "${architectures[@]}"; do
-              cross build --target x86_64-unknown-linux-musl
-              mv target/x86_64-unknown-linux-musl/debug/journalview bin/journalview-$version-linux-$arch
+              cross build --release --target $arch
+              arch_name=$(echo $arch | sed 's/[^a-zA-Z0-9]/-/g')  # Sanitize the architecture name
+              mv target/$arch/release/journalview bin/journalview-$version-$arch_name
           done
 
-          echo "ARTIFACT_NAME=journalview-$(date +'%d.%m.%Y')" >> $GITHUB_ENV
+          # Set the artifact name to include the version and current date
+          echo "ARTIFACT_NAME=journalview-${version}-$(date +'%d.%m.%Y').zip" >> $GITHUB_ENV
 
-      - name: Upload Binaries
-        uses: actions/upload-artifact@v4
+      - name: Create a zip file with binaries
+        run: |
+          zip -r ${{ env.ARTIFACT_NAME }} bin/
+
+      - name: Create GitHub Release
+        uses: actions/create-release@v1
         with:
-          name: ${{ env.ARTIFACT_NAME }}
-          path: bin/
+          tag_name: ${{ github.ref }}
+          release_name: "Release ${{ github.ref }}"
+          body: "Release of journalview version ${{ github.event.inputs.version }}"
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload release asset
+        uses: actions/upload-release-asset@v1
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ${{ env.ARTIFACT_NAME }}
+          asset_name: ${{ env.ARTIFACT_NAME }}
+          asset_content_type: application/zip
+
