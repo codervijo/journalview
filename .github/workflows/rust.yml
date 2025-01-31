@@ -63,7 +63,7 @@ jobs:
         uses: actions/create-release@v1
         id: create_release
         with:
-          tag_name: v${{ github.run_number }}  # Use a versioned tag like 'v1.0.0' or 'v{run_number}'
+          tag_name: v0.0.${{ github.run_number }}  # Use a versioned tag like 'v1.0.0' or 'v{run_number}'
           release_name: "Release v${{ github.run_number }}"
           body: "Release of journalview version ${{ github.event.inputs.version }}"
           draft: false
