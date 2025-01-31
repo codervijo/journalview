@@ -13,29 +13,30 @@ A lightweight, terminal-based application written in Rust for efficiently viewin
 
 ## Installation
 
-### Install Directly
+### Install Directly (Without Building from Source)
 ```
 curl -sL https://github.com/codervijo/journalview/raw/main/install.sh | bash
 ```
 
-### Prerequisites
+### Build From Source
+#### Prerequisites
 
 - **Rust**: Ensure Rust is installed. You can install Rust using [rustup](https://rustup.rs/).
 
-### Clone the Repository
+#### Clone the Repository
 
 ```bash
 git clone https://github.com/codervijo/journalview.git
 cd journalview
 ```
 
-### Build the Application
+#### Build the Application
 
 ```bash
 cargo build --release
 ```
 
-### Run the Application
+#### Run the Application
 
 ```bash
 ./target/release/journalview
