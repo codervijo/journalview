@@ -40,24 +40,19 @@ jobs:
 
       - name: Build Binaries
         run: |
-          # Get version from event input, default to 'latest' if not provided
           version="${{ github.event.inputs.version }}"
           [ -z "$version" ] && version="latest"
 
-          # Create bin directory
           mkdir -p bin
 
-          # Define architectures for cross-compilation
           architectures=("x86_64-unknown-linux-musl")
 
-          # Build binaries for each architecture
           for arch in "${architectures[@]}"; do
               cross build --release --target $arch
               arch_name=$(echo $arch | sed 's/[^a-zA-Z0-9]/-/g')  # Sanitize the architecture name
               mv target/$arch/release/journalview bin/journalview-$version-$arch_name
           done
 
-          # Set the artifact name to include the version and current date
           echo "ARTIFACT_NAME=journalview-${version}-$(date +'%d.%m.%Y').zip" >> $GITHUB_ENV
 
       - name: Create a zip file with binaries
@@ -66,9 +61,10 @@ jobs:
 
       - name: Create GitHub Release
         uses: actions/create-release@v1
+        id: create_release
         with:
-          tag_name: ${{ github.ref }}
-          release_name: "Release ${{ github.ref }}"
+          tag_name: v${{ github.run_number }}  # Use a versioned tag like 'v1.0.0' or 'v{run_number}'
+          release_name: "Release v${{ github.run_number }}"
           body: "Release of journalview version ${{ github.event.inputs.version }}"
           draft: false
           prerelease: false
@@ -82,4 +78,3 @@ jobs:
           asset_path: ${{ env.ARTIFACT_NAME }}
           asset_name: ${{ env.ARTIFACT_NAME }}
           asset_content_type: application/zip
-
