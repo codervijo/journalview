@@ -93,10 +93,10 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Upload release asset
-        uses: actions/upload-release-asset@v1
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ${{ env.ARTIFACT_NAME }}
-          asset_name: ${{ env.ARTIFACT_NAME }}
-          asset_content_type: application/zip
+      # - name: Upload release asset
+      #   uses: actions/upload-release-asset@v1
+      #   with:
+      #     upload_url: ${{ steps.create_release.outputs.upload_url }}
+      #     asset_path: ${{ env.ARTIFACT_NAME }}
+      #     asset_name: ${{ env.ARTIFACT_NAME }}
+      #     asset_content_type: application/zip
