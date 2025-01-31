@@ -43,7 +43,7 @@ jobs:
           mkdir -p bin
 
           # Define architectures for cross-compilation
-          architectures=("x86_64-unknown-linux-musl" "aarch64-unknown-linux-musl" "x86_64-apple-darwin" "aarch64-apple-darwin" "x86_64-pc-windows-gnu" "aarch64-pc-windows-msvc")
+          architectures=("x86_64-unknown-linux-musl")
 
           # Build binaries for each architecture
           for arch in "${architectures[@]}"; do
