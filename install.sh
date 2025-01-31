@@ -1,13 +1,16 @@
 #!/bin/bash
 set -e
 
-# GitHub release download URL
-DOWNLOAD_URL="https://github.com/codervijo/journalview/releases/download/v0.0.28/journalview-latest-31.01.2025.zip"
-
 # Define output file name
-OUTPUT_FILE="journalview-latest-31.01.2025.zip"
+BUILD_DATE="31.01.2025"
+RELEASE_VERSION="v0.0.28"
+OUTPUT_FILE="journalview-latest-${BUILD_DATE}.zip"
 ARCH="x86-64"
 OS="unknown-linux-musl"
+
+# GitHub release download URL
+DOWNLOAD_URL="https://github.com/codervijo/journalview/releases/download/${RELEASE_VERSION}/journalview-latest-${BUILD_DATE}.zip"
+
 
 # Download the binary
 echo "Downloading JournalView from: $DOWNLOAD_URL"
