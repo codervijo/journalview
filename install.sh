@@ -3,7 +3,7 @@ set -e
 
 # Define output file name
 BUILD_DATE="31.01.2025"
-RELEASE_VERSION="v0.0.28"
+RELEASE_VERSION="v0.0.34"
 OUTPUT_FILE="journalview-latest-${BUILD_DATE}.zip"
 ARCH="x86-64"
 OS="unknown-linux-musl"
