@@ -11,6 +11,7 @@ OS="unknown-linux-musl"
 # GitHub release download URL
 DOWNLOAD_URL="https://github.com/codervijo/journalview/releases/download/${RELEASE_VERSION}/journalview-latest-${BUILD_DATE}.zip"
 
+mkdir -p $HOME/.local/bin
 
 # Download the binary
 echo "Downloading JournalView from: $DOWNLOAD_URL"
@@ -22,7 +23,9 @@ unzip "$OUTPUT_FILE" -d ./journalview
 
 # Make executable
 chmod +x ./journalview/bin/journalview-latest-${ARCH}-${OS}
+cp ./journalview/bin/journalview-latest-${ARCH}-${OS} ${HOME}/.local/bin/journalview
+chmod +x $HOME/.local/bin/journalview
 
-echo "Download complete. Run ./bin/journalview-latest-${ARCH}-${OS} to start JournalView."
+echo "Download complete. Run journalview to start JournalView."
 
 
