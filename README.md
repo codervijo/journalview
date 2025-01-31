@@ -13,6 +13,11 @@ A lightweight, terminal-based application written in Rust for efficiently viewin
 
 ## Installation
 
+### Install Directly
+```
+curl -sL https://github.com/codervijo/journalview/raw/main/install.sh | bash
+```
+
 ### Prerequisites
 
 - **Rust**: Ensure Rust is installed. You can install Rust using [rustup](https://rustup.rs/).
