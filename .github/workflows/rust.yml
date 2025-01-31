@@ -60,7 +60,8 @@ jobs:
           zip -r ${{ env.ARTIFACT_NAME }} bin/
 
       - name: Check GitHub Token
-        run: echo "Token Length: ${#GITHUB_TOKEN}"
+        run: |
+          echo "Token Length: ${#GITHUB_TOKEN}"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
