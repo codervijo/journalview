@@ -65,6 +65,12 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Debug GitHub Token
+        run: |
+          curl -H "Authorization: token $GITHUB_TOKEN" https://api.github.com/user
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Create GitHub Release
         uses: actions/create-release@v1
         id: create_release
