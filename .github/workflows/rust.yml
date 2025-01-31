@@ -59,6 +59,11 @@ jobs:
         run: |
           zip -r ${{ env.ARTIFACT_NAME }} bin/
 
+      - name: Check GitHub Token
+        run: echo "Token Length: ${#GITHUB_TOKEN}"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Create GitHub Release
         uses: actions/create-release@v1
         id: create_release
