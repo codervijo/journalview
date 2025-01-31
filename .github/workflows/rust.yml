@@ -78,7 +78,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Debug Upload URL
-        run: echo "Upload URL: ${{ steps.create_release.outputs.upload_url }}"
+        run: |
+          echo "Upload URL: ${{ steps.create_release.outputs.upload_url }}"
 
       - name: Upload release asset
         uses: actions/upload-release-asset@v1
