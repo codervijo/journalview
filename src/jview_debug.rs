@@ -73,6 +73,7 @@ pub fn init_debug_log() {
 }
 
 /// Shutdown and flush the logs before exiting
+#[allow(dead_code)]
 pub fn shutdown_debug_log() {
     if let Some(ref file_mutex) = LOGGER.file.as_ref() {
         if let Ok(mut file) = file_mutex.lock() {
@@ -89,11 +90,12 @@ pub fn log_debug_info(message: &str, args: Arguments) {
     LOGGER.flush();
 }
 
-
+#[allow(dead_code)]
 pub fn log_debug_warn(message: String) {
     log::warn!("{}", message);
 }
 
+#[allow(dead_code)]
 pub fn log_debug_error(message: String) {
     log::error!("{}", message);
 }

@@ -4,6 +4,7 @@ use ratatui::{
 };
 use crossterm::event::{self, Event, KeyCode};
 use std::process::Command;
+#[allow(unused_imports)]
 use crate::jview_config;
 use crate::jview_config::settings;
 use crate::jview_debug;

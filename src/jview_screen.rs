@@ -12,6 +12,7 @@ pub enum UiSection {
     Search,
     Logs,
     Selector,
+#[allow(dead_code)]
     Help,
 }
 

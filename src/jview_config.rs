@@ -11,7 +11,9 @@ pub mod settings {
     }
 
     // Atomic values for thread-safe primitive types
+    #[allow(dead_code)]
     static MAX_CONNECTIONS: AtomicUsize = AtomicUsize::new(10);
+    #[allow(dead_code)]
     static LOGGING_ENABLED: AtomicBool = AtomicBool::new(true);
 
     /// Set the username
@@ -33,21 +35,25 @@ pub mod settings {
     }
 
     /// Set the maximum number of connections
+    #[allow(dead_code)]
     pub fn set_max_connections(value: usize) {
         MAX_CONNECTIONS.store(value, Ordering::SeqCst);
     }
 
     /// Get the maximum number of connections
+    #[allow(dead_code)]
     pub fn get_max_connections() -> usize {
         MAX_CONNECTIONS.load(Ordering::SeqCst)
     }
 
     /// Enable or disable logging
+    #[allow(dead_code)]
     pub fn set_logging_enabled(enabled: bool) {
         LOGGING_ENABLED.store(enabled, Ordering::SeqCst);
     }
 
     /// Check if logging is enabled
+    #[allow(dead_code)]
     pub fn is_logging_enabled() -> bool {
         LOGGING_ENABLED.load(Ordering::SeqCst)
     }

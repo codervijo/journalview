@@ -5,6 +5,7 @@ use ratatui::{
 };
 use ratatui::style;
 use crossterm::event::{self, Event, KeyCode};
+#[allow(unused_imports)]
 use crate::jview_config;
 use crate::jview_config::settings;
 use crate::jview_debug;
