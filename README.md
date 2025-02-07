@@ -19,27 +19,11 @@ curl -sL https://github.com/codervijo/journalview/raw/main/install.sh | bash
 ```
 
 ### Build From Source
-#### Prerequisites
 
-- **Rust**: Ensure Rust is installed. You can install Rust using [rustup](https://rustup.rs/).
-
-#### Clone the Repository
+Ensure Rust is installed. You can install Rust using [rustup](https://rustup.rs/).
 
 ```bash
-git clone https://github.com/codervijo/journalview.git
-cd journalview
-```
-
-#### Build the Application
-
-```bash
-cargo build --release
-```
-
-#### Run the Application
-
-```bash
-./target/release/journalview
+cargo install --git https://github.com/codervijo/journalview.git journalview
 ```
 
 ## Usage
