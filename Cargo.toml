@@ -8,7 +8,7 @@ license = "MIT"  # Ensure this matches your LICENSE file
 repository = "https://github.com/codervijo/journalview"
 homepage = "https://github.com/codervijo/journalview"
 documentation = "https://docs.rs/journalview"
-readme = "README"
+readme = "README.md"
 keywords = ["journal", "view", "rust"]
 categories = ["command-line-utilities"]
 
