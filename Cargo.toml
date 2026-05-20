@@ -3,14 +3,14 @@ name = "journalview"
 version = "0.1.0"
 edition = "2021"
 authors = ["Vijo Cherian <codervijo@gmail.com>"]
-description = "A lightweight, terminal-based application written in Rust for efficiently viewing, filtering, and navigating system logs from `journalctl`."
-license = "MIT"  # Ensure this matches your LICENSE file
+description = "A fast terminal UI for browsing journalctl logs by systemd unit."
+license = "MIT"
 repository = "https://github.com/codervijo/journalview"
 homepage = "https://github.com/codervijo/journalview"
 documentation = "https://docs.rs/journalview"
 readme = "README.md"
-keywords = ["journal", "view", "rust"]
-categories = ["command-line-utilities"]
+keywords = ["journalctl", "systemd", "tui", "logs", "ratatui"]
+categories = ["command-line-utilities", "development-tools::debugging"]
 
 [dependencies]
 chrono = "0.4.39"
